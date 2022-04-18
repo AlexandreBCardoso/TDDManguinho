@@ -36,7 +36,7 @@ class HttpClientSpy: HttpPostClient {
 
 class RemoteAddAccountTests: XCTestCase {
     
-    func test_() {
+    func test_add_shouldCallHttpClient_withCorrectUrl() {
         let url = URL(string: "https://any-url.com")!
         let httpClientSpy = HttpClientSpy()
         let sut = RemoteAddAccout(url: url, httpClient: httpClientSpy)
