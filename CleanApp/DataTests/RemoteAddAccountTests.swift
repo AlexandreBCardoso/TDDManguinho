@@ -18,20 +18,23 @@ class RemoteAddAccout {
     }
     
     func add(addAccountModel: AddAccountModel) {
-        httpClient.post(url: url)
+        let data = try? JSONEncoder().encode(addAccountModel)
+        httpClient.post(to: url, with: data)
     }
 
 }
 
 protocol HttpPostClient {
-    func post(url: URL)
+    func post(to url: URL, with data: Data?)
 }
 
 class HttpClientSpy: HttpPostClient {
     private(set) var url: URL?
+    private(set) var data: Data?
     
-    func post(url: URL) {
+    func post(to url: URL, with data: Data?) {
         self.url = url
+        self.data = data
     }
 }
 
@@ -41,10 +44,32 @@ class RemoteAddAccountTests: XCTestCase {
         let url = URL(string: "https://any-url.com")!
         let httpClientSpy = HttpClientSpy()
         let sut = RemoteAddAccout(url: url, httpClient: httpClientSpy)
+        let addAccountModel = AddAccountModel(
+            name: "any_name",
+            email: "any_email@mail.com",
+            password: "any_password",
+            passwordConfirmation: "any_password"
+        )
         
-        sut.add()
+        sut.add(addAccountModel: addAccountModel)
         
         XCTAssertEqual(httpClientSpy.url, url)
     }
     
+    func test_add_shouldCallHttpClient_withCorrectData() throws {
+        let url = URL(string: "https://any-url.com")!
+        let httpClientSpy = HttpClientSpy()
+        let sut = RemoteAddAccout(url: url, httpClient: httpClientSpy)
+        let addAccountModel = AddAccountModel(
+            name: "any_name",
+            email: "any_email@mail.com",
+            password: "any_password",
+            passwordConfirmation: "any_password"
+        )
+        let data = try XCTUnwrap(JSONEncoder().encode(addAccountModel))
+        
+        sut.add(addAccountModel: addAccountModel)
+        
+        XCTAssertEqual(httpClientSpy.data, data)
+    }
 }
