@@ -12,16 +12,16 @@ import Data
 class HttpClientSpy: HttpPostClient {
     private(set) var urls = [URL]()
     private(set) var data: Data?
-    private(set) var completion: ((HttpError) -> Void)?
+    private(set) var completion: ((Result<Data, HttpError>) -> Void)?
     
-    func post(to url: URL, with data: Data?, completion: @escaping (HttpError) -> Void) {
+    func post(to url: URL, with data: Data?, completion: @escaping (Result<Data, HttpError>) -> Void) {
         self.urls.append(url)
         self.data = data
         self.completion = completion
     }
     
     func completionWithError(_ error: HttpError) {
-        completion?(error)
+        completion?(.failure(error))
     }
 }
 
@@ -51,8 +51,13 @@ class RemoteAddAccountTests: XCTestCase {
         let addAccountModel = makeAddAccountModel()
         let expectation = expectation(description: "waiting")
         
-        sut.add(addAccountModel: addAccountModel) { error in
-            XCTAssertEqual(error, .unexpected)
+        sut.add(addAccountModel: addAccountModel) { result in
+            switch result {
+                case let .failure(error):
+                    XCTAssertEqual(error, .unexpected)
+                case .success:
+                    XCTFail("Errou feio")
+            }
             expectation.fulfill()
         }
         httpClientSpy.completionWithError(.noConnectivity)
