@@ -12,6 +12,8 @@
 		BC1A30E7280E2B5E003D9E03 /* Domain.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BCE9F810280E271C006E56F4 /* Domain.framework */; };
 		BC1A30E8280E2B5E003D9E03 /* Domain.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = BCE9F810280E271C006E56F4 /* Domain.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		BC1A30ED280E3D9C003D9E03 /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC1A30EC280E3D9C003D9E03 /* Model.swift */; };
+		BC1A30EF280E3E14003D9E03 /* RemoteAddAccout.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC1A30EE280E3E14003D9E03 /* RemoteAddAccout.swift */; };
+		BC1A30F1280E3E68003D9E03 /* HttpPostClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC1A30F0280E3E68003D9E03 /* HttpPostClient.swift */; };
 		BCE9F818280E2817006E56F4 /* AddAccount.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCE9F817280E2817006E56F4 /* AddAccount.swift */; };
 		BCE9F81A280E2961006E56F4 /* AccountModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCE9F819280E2961006E56F4 /* AccountModel.swift */; };
 /* End PBXBuildFile section */
@@ -52,6 +54,8 @@
 		BC1A30D8280E2B28003D9E03 /* DataTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DataTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		BC1A30DD280E2B28003D9E03 /* RemoteAddAccountTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteAddAccountTests.swift; sourceTree = "<group>"; };
 		BC1A30EC280E3D9C003D9E03 /* Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
+		BC1A30EE280E3E14003D9E03 /* RemoteAddAccout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteAddAccout.swift; sourceTree = "<group>"; };
+		BC1A30F0280E3E68003D9E03 /* HttpPostClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HttpPostClient.swift; sourceTree = "<group>"; };
 		BCE9F810280E271C006E56F4 /* Domain.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Domain.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		BCE9F817280E2817006E56F4 /* AddAccount.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddAccount.swift; sourceTree = "<group>"; };
 		BCE9F819280E2961006E56F4 /* AccountModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountModel.swift; sourceTree = "<group>"; };
@@ -87,6 +91,8 @@
 		BC1A30D2280E2B28003D9E03 /* Data */ = {
 			isa = PBXGroup;
 			children = (
+				BC1A30EE280E3E14003D9E03 /* RemoteAddAccout.swift */,
+				BC1A30F0280E3E68003D9E03 /* HttpPostClient.swift */,
 			);
 			path = Data;
 			sourceTree = "<group>";
@@ -225,6 +231,7 @@
 				TargetAttributes = {
 					BC1A30D0280E2B28003D9E03 = {
 						CreatedOnToolsVersion = 13.0;
+						LastSwiftMigration = 1300;
 					};
 					BC1A30D7280E2B28003D9E03 = {
 						CreatedOnToolsVersion = 13.0;
@@ -284,6 +291,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BC1A30F1280E3E68003D9E03 /* HttpPostClient.swift in Sources */,
+				BC1A30EF280E3E14003D9E03 /* RemoteAddAccout.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -324,6 +333,7 @@
 		BC1A30E1280E2B28003D9E03 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
@@ -347,6 +357,7 @@
 				SDKROOT = macosx;
 				SKIP_INSTALL = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
@@ -354,6 +365,7 @@
 		BC1A30E2280E2B28003D9E03 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
@@ -384,6 +396,7 @@
 		BC1A30E4280E2B28003D9E03 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
@@ -407,6 +420,7 @@
 		BC1A30E5280E2B28003D9E03 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
