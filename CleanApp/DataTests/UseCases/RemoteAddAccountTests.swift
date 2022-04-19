@@ -10,11 +10,11 @@ import Domain
 import Data
 
 class HttpClientSpy: HttpPostClient {
-    private(set) var url: URL?
+    private(set) var urls = [URL]()
     private(set) var data: Data?
     
     func post(to url: URL, with data: Data?) {
-        self.url = url
+        self.urls.append(url)
         self.data = data
     }
 }
@@ -28,7 +28,7 @@ class RemoteAddAccountTests: XCTestCase {
         
         sut.add(addAccountModel: addAccountModel)
         
-        XCTAssertEqual(httpClientSpy.url, url)
+        XCTAssertEqual(httpClientSpy.urls, [url])
     }
     
     func test_add_shouldCallHttpClient_withCorrectData() {
