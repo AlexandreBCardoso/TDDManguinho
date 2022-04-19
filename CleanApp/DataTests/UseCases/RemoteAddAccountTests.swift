@@ -32,7 +32,7 @@ class HttpClientSpy: HttpPostClient {
 class RemoteAddAccountTests: XCTestCase {
     
     func test_add_shouldCallHttpClient_withCorrectUrl() {
-        let url = URL(string: "https://any-url.com")!
+        let url = makeUrl()
         let (sut, httpClientSpy) = makeSUT(url: url)
         let addAccountModel = makeAddAccountModel()
         
@@ -49,45 +49,32 @@ class RemoteAddAccountTests: XCTestCase {
         
         XCTAssertEqual(httpClientSpy.data, addAccountModel.toData())
     }
-
+    
     func test_add_shouldCompleteWithError_ifClientFails() {
         let (sut, httpClientSpy) = makeSUT()
-        let addAccountModel = makeAddAccountModel()
-        let expectation = expectation(description: "waiting")
         
-        sut.add(addAccountModel: addAccountModel) { result in
-            switch result {
-                case let .failure(error):
-                    XCTAssertEqual(error, .unexpected)
-                case .success:
-                    XCTFail("Errou feio")
-            }
-            expectation.fulfill()
-        }
-        httpClientSpy.completionWithError(.noConnectivity)
-        wait(for: [expectation], timeout: 1)
+        expect(sut, completeWith: .failure(.unexpected), when: {
+            httpClientSpy.completionWithError(.noConnectivity)
+        })
     }
-
+    
     func test_add_shouldCompleteWithEAccount_ifClientData() {
         let (sut, httpClientSpy) = makeSUT()
-        let addAccountModel = makeAddAccountModel()
-        let expectedAccount = makeAccountModel()
-        let expectation = expectation(description: "waiting")
+        let account = makeAccountModel()
         
-        sut.add(addAccountModel: addAccountModel) { result in
-            switch result {
-                case .failure:
-                    XCTFail("Errou feio")
-                case let .success(receivedAccount):
-                    XCTAssertEqual(receivedAccount, expectedAccount)
-                    
-            }
-            expectation.fulfill()
+        expect(sut, completeWith: .success(account)) {
+            httpClientSpy.completionWithData(account.toData()!)
         }
-        httpClientSpy.completionWithData(expectedAccount.toData()!)
-        wait(for: [expectation], timeout: 1)
     }
-
+    
+    func test_add_shouldCompleteWithError_ifClientFailsData() {
+        let (sut, httpClientSpy) = makeSUT()
+        
+        expect(sut, completeWith: .failure(.unexpected)) {
+            httpClientSpy.completionWithData(makeInvalidData())
+        }
+    }
+    
 }
 
 extension RemoteAddAccountTests {
@@ -100,6 +87,27 @@ extension RemoteAddAccountTests {
         return (sut, httpClientSpy)
     }
     
+    func expect(
+        _ sut: RemoteAddAccout,
+        completeWith expectedResult: Result<AccountModel, DomainError>,
+        when action: () -> Void
+    ) {
+        let exp = expectation(description: "waiting")
+        sut.add(addAccountModel: makeAddAccountModel()) { receivedResult in
+            switch (expectedResult, receivedResult) {
+                case (let .failure(expectedError), let .failure(receivedError)):
+                    XCTAssertEqual(expectedError, receivedError)
+                case (let .success(expectedAccount), let .success(receivedAccount)):
+                    XCTAssertEqual(expectedAccount, receivedAccount)
+                default:
+                    XCTFail("Expected \(expectedResult) error received \(receivedResult) instead")
+            }
+            exp.fulfill()
+        }
+        action()
+        wait(for: [exp], timeout: 1)
+    }
+    
     func makeAddAccountModel() -> AddAccountModel {
         return AddAccountModel(
             name: "any_name",
@@ -108,7 +116,15 @@ extension RemoteAddAccountTests {
             passwordConfirmation: "any_password"
         )
     }
-
+    
+    func makeInvalidData() -> Data {
+        return Data("invalid_data".utf8)
+    }
+    
+    func makeUrl() -> URL {
+        return URL(string: "https://any-url.com")!
+    }
+    
     func makeAccountModel() -> AccountModel {
         return AccountModel(
             id: "any_id",

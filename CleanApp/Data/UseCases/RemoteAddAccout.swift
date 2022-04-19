@@ -26,11 +26,13 @@ public final class RemoteAddAccout: AddAccount {
                 case let .success(data):
                     if let model: AccountModel = data.toModel() {
                         completion(.success(model))
+                    } else {
+                        completion(.failure(.unexpected))
                     }
                 case .failure:
                     completion(.failure(.unexpected))
             }
         }
     }
-
+    
 }
