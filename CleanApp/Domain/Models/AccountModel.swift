@@ -5,7 +5,7 @@
 //  Created by Alexandre Cardoso on 18/04/22.
 //
 
-public struct AccountModel {
+public struct AccountModel: Model {
     public var id: String
     public var name: String
     public var email: String
