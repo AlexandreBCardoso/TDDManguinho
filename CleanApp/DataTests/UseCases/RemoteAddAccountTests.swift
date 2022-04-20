@@ -80,11 +80,24 @@ class RemoteAddAccountTests: XCTestCase {
 extension RemoteAddAccountTests {
     
     func makeSUT(
-        url: URL = URL(string: "https://any-url.com")!
+        url: URL = URL(string: "https://any-url.com")!,
+        file: StaticString = #filePath,
+        line: UInt = #line
     ) -> (sut: RemoteAddAccout, httpClient: HttpClientSpy) {
         let httpClientSpy = HttpClientSpy()
         let sut = RemoteAddAccout(url: url, httpClient: httpClientSpy)
+        
+        // Teste para validar Memory Leak
+        checkMemoryLeak(for: sut)
+        checkMemoryLeak(for: httpClientSpy)
+
         return (sut, httpClientSpy)
+    }
+    
+    func checkMemoryLeak(for instance: AnyObject, file: StaticString = #filePath, line: UInt = #line) {
+        addTeardownBlock { [weak instance] in
+            XCTAssertNil(instance, file: file, line: line)
+        }
     }
     
     func expect(
