@@ -9,26 +9,6 @@ import XCTest
 import Domain
 import Data
 
-class HttpClientSpy: HttpPostClient {
-    private(set) var urls = [URL]()
-    private(set) var data: Data?
-    private(set) var completion: ((Result<Data, HttpError>) -> Void)?
-    
-    func post(to url: URL, with data: Data?, completion: @escaping (Result<Data, HttpError>) -> Void) {
-        self.urls.append(url)
-        self.data = data
-        self.completion = completion
-    }
-    
-    func completionWithError(_ error: HttpError) {
-        completion?(.failure(error))
-    }
-    
-    func completionWithData(_ data: Data) {
-        completion?(.success(data))
-    }
-}
-
 class RemoteAddAccountTests: XCTestCase {
     
     func test_add_shouldCallHttpClient_withCorrectUrl() {
@@ -108,12 +88,6 @@ extension RemoteAddAccountTests {
         return (sut, httpClientSpy)
     }
     
-    func checkMemoryLeak(for instance: AnyObject, file: StaticString = #filePath, line: UInt = #line) {
-        addTeardownBlock { [weak instance] in
-            XCTAssertNil(instance, file: file, line: line)
-        }
-    }
-    
     func expect(
         _ sut: RemoteAddAccout,
         completeWith expectedResult: Result<AccountModel, DomainError>,
@@ -143,23 +117,6 @@ extension RemoteAddAccountTests {
             email: "any_email@mail.com",
             password: "any_password",
             passwordConfirmation: "any_password"
-        )
-    }
-    
-    func makeInvalidData() -> Data {
-        return Data("invalid_data".utf8)
-    }
-    
-    func makeUrl() -> URL {
-        return URL(string: "https://any-url.com")!
-    }
-    
-    func makeAccountModel() -> AccountModel {
-        return AccountModel(
-            id: "any_id",
-            name: "any_name",
-            email: "any_email@mail.com",
-            password: "any_password"
         )
     }
     
