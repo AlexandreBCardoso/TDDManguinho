@@ -75,6 +75,20 @@ class RemoteAddAccountTests: XCTestCase {
         }
     }
     
+    // Teste para caso o Post estiver demorando e o RemoteAddAccount
+    // já estiver como nulo, nao executar
+    func test_add_shouldNotComplete_ifSutHasBeenDeallocated() {
+        let httpClientSpy = HttpClientSpy()
+        var sut: RemoteAddAccout? = RemoteAddAccout(url: makeUrl(), httpClient: httpClientSpy)
+        var result: Result<AccountModel, DomainError>?
+        
+        sut?.add(addAccountModel: makeAddAccountModel()) { result = $0 }
+        sut = nil
+        httpClientSpy.completionWithError(.noConnectivity)
+        
+        XCTAssertNil(result)
+    }
+    
 }
 
 extension RemoteAddAccountTests {
